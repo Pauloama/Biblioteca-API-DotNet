@@ -3,6 +3,7 @@ using Biblioteca.API.Models;
 using Biblioteca.API.Data;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using Biblioteca.API.Dtos;
 
 namespace Biblioteca.API.Controllers
 {
@@ -21,42 +22,79 @@ namespace Biblioteca.API.Controllers
         public async Task<IActionResult> ObterTodos()
         {
             var livros = await _context.Livros.ToListAsync();
-            return Ok(livros);
+
+            var livrosDto = livros.Select(livro => new LivroRespostaDto
+            {
+                Id = livro.Id,
+                Titulo = livro.Titulo,
+                Autor = livro.Autor,
+                Genero = livro.Genero,
+                Preco = livro.Preco
+            });
+            return Ok(livrosDto);
+
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> ObterPorId(int id)
         {
 
-            var livro = _context.Livros.Find(id);
+            var livro = await _context.Livros.FindAsync(id);
 
             if (livro == null) return NotFound();
+
+            var livroDto = new LivroRespostaDto
+            {
+                Id = livro.Id,
+                Titulo = livro.Titulo,
+                Autor = livro.Autor,
+                Genero = livro.Genero,
+                Preco = livro.Preco
+            };
 
             return Ok(livro);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Criar(Livro livro)
+        public async Task<IActionResult> Criar(LivroCriacaoDto livroDto)
         {
-            _context.Livros.Add(livro);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
+            var livroParaSalvar = new Livro
+            {
+                Titulo = livroDto.Titulo,
+                Autor = livroDto.Autor,
+                Genero = livroDto.Genero,
+                Preco = livroDto.Preco
+            };
+
+            _context.Livros.Add(livroParaSalvar);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(ObterPorId), new {id = livro.Id}, livro);
+            return CreatedAtAction(nameof(ObterPorId), new { id = livroParaSalvar.Id }, livroParaSalvar);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Atualizar(int id, Livro livroAtualizado)
+        public async Task<IActionResult> Atualizar(int id, LivroCriacaoDto livroDto)
         {
-            var livro = _context.Livros.Find(id);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+
+            var livro = await _context.Livros.FindAsync(id);
             if (livro == null) return NotFound();
 
-            livro.Titulo = livroAtualizado.Titulo;
-            livro.Autor = livroAtualizado.Autor;
-            livro.Genero = livroAtualizado.Genero;
-            livro.Preco = livroAtualizado.Preco;
+            livro.Titulo = livroDto.Titulo;
+            livro.Autor = livroDto.Autor;
+            livro.Genero = livroDto.Genero;
+            livro.Preco = livroDto.Preco;
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return NoContent();
         }
