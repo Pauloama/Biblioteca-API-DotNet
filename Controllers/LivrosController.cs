@@ -4,6 +4,7 @@ using Biblioteca.API.Data;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Biblioteca.API.Dtos;
+using AutoMapper;
 
 namespace Biblioteca.API.Controllers
 {
@@ -12,10 +13,12 @@ namespace Biblioteca.API.Controllers
     public class LivrosController : ControllerBase
     {
         private readonly BibliotecaContext _context;
+        private readonly IMapper _mapper;
 
-        public LivrosController(BibliotecaContext context)
+        public LivrosController(BibliotecaContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -23,14 +26,8 @@ namespace Biblioteca.API.Controllers
         {
             var livros = await _context.Livros.ToListAsync();
 
-            var livrosDto = livros.Select(livro => new LivroRespostaDto
-            {
-                Id = livro.Id,
-                Titulo = livro.Titulo,
-                Autor = livro.Autor,
-                Genero = livro.Genero,
-                Preco = livro.Preco
-            });
+            var livrosDto = _mapper.Map<List<LivroRespostaDto>>(livros);
+
             return Ok(livrosDto);
 
         }
@@ -43,14 +40,7 @@ namespace Biblioteca.API.Controllers
 
             if (livro == null) return NotFound();
 
-            var livroDto = new LivroRespostaDto
-            {
-                Id = livro.Id,
-                Titulo = livro.Titulo,
-                Autor = livro.Autor,
-                Genero = livro.Genero,
-                Preco = livro.Preco
-            };
+            var livroDto = _mapper.Map<LivroRespostaDto>(livro);
 
             return Ok(livro);
         }
@@ -58,41 +48,26 @@ namespace Biblioteca.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Criar(LivroCriacaoDto livroDto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            var livroParaSalvar = new Livro
-            {
-                Titulo = livroDto.Titulo,
-                Autor = livroDto.Autor,
-                Genero = livroDto.Genero,
-                Preco = livroDto.Preco
-            };
+            var livro = _mapper.Map<Livro>(livroDto);
 
-            _context.Livros.Add(livroParaSalvar);
+            _context.Livros.Add(livro);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(ObterPorId), new { id = livroParaSalvar.Id }, livroParaSalvar);
+            return CreatedAtAction(nameof(ObterPorId), new { id = livro.Id }, livro);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Atualizar(int id, LivroCriacaoDto livroDto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            if (!ModelState.IsValid) return BadRequest(ModelState);
 
 
             var livro = await _context.Livros.FindAsync(id);
             if (livro == null) return NotFound();
 
-            livro.Titulo = livroDto.Titulo;
-            livro.Autor = livroDto.Autor;
-            livro.Genero = livroDto.Genero;
-            livro.Preco = livroDto.Preco;
+            _mapper.Map(livroDto, livro);
 
             await _context.SaveChangesAsync();
 
