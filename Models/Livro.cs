@@ -17,5 +17,5 @@ public class Livro
     public string Genero { get; set; } = string.Empty;
 
     [Range(0.01, 1000.00, ErrorMessage = "O preço deve ser entre 1 centavo e 1000 reais.")]
-    public double Preco { get; set;}
+    public double Preco { get; set; }
 }

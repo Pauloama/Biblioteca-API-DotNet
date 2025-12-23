@@ -5,6 +5,7 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Biblioteca.API.Dtos;
 using AutoMapper;
+using Biblioteca.API.Repositories.Interfaces;
 
 namespace Biblioteca.API.Controllers
 {
@@ -12,19 +13,19 @@ namespace Biblioteca.API.Controllers
     [ApiController]
     public class LivrosController : ControllerBase
     {
-        private readonly BibliotecaContext _context;
+        private readonly ILivroRepository _repository;
         private readonly IMapper _mapper;
 
-        public LivrosController(BibliotecaContext context, IMapper mapper)
+        public LivrosController(ILivroRepository repository, IMapper mapper)
         {
-            _context = context;
+            _repository = repository;
             _mapper = mapper;
         }
 
         [HttpGet]
         public async Task<IActionResult> ObterTodos()
         {
-            var livros = await _context.Livros.ToListAsync();
+            var livros = await _repository.ObterTodos();
 
             var livrosDto = _mapper.Map<List<LivroRespostaDto>>(livros);
 
@@ -36,13 +37,13 @@ namespace Biblioteca.API.Controllers
         public async Task<IActionResult> ObterPorId(int id)
         {
 
-            var livro = await _context.Livros.FindAsync(id);
+            var livro = await _repository.ObterPorId(id);
 
             if (livro == null) return NotFound();
 
             var livroDto = _mapper.Map<LivroRespostaDto>(livro);
 
-            return Ok(livro);
+            return Ok(livroDto);
         }
 
         [HttpPost]
@@ -52,8 +53,7 @@ namespace Biblioteca.API.Controllers
 
             var livro = _mapper.Map<Livro>(livroDto);
 
-            _context.Livros.Add(livro);
-            await _context.SaveChangesAsync();
+            await _repository.Adicionar(livro);
 
             return CreatedAtAction(nameof(ObterPorId), new { id = livro.Id }, livro);
         }
@@ -64,24 +64,21 @@ namespace Biblioteca.API.Controllers
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
 
-            var livro = await _context.Livros.FindAsync(id);
+            var livro = await _repository.ObterPorId(id);
             if (livro == null) return NotFound();
 
             _mapper.Map(livroDto, livro);
 
-            await _context.SaveChangesAsync();
+            await _repository.Atualizar(livro);
 
             return NoContent();
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Deletar(int id)
+        public async Task<IActionResult> Deletar(int id)
         {
-            var livro = _context.Livros.Find(id);
-            if (livro == null) return NotFound();
-
-            _context.Livros.Remove(livro);
-            _context.SaveChanges();
+            var sucesso = await _repository.Deletar(id);
+            if (!sucesso) return NotFound();
 
             return NoContent();
         }
