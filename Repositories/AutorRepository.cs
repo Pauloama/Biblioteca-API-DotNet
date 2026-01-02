@@ -1,7 +1,6 @@
-using Biblioteca.APi.Repositories.Interfaces;
+using Biblioteca.API.Repositories.Interfaces;
 using Biblioteca.API.Data;
 using Biblioteca.API.Models;
-using Biblioteca.API.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace Biblioteca.API.Repositories;
@@ -42,10 +41,7 @@ public class AutorRepository : IAutorRepository
     public async Task<bool> Deletar(int id)
     {
         var autor = await _context.Autores.FindAsync(id);
-        if (autor  == null)
-        {
-            return false;
-        }
+        if (autor  == null) return false;
         _context.Autores.Remove(autor);
         await _context.SaveChangesAsync();
         return true;

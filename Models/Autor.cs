@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Biblioteca.API.Models;
 
@@ -12,4 +13,7 @@ public class Autor
 
     [Required(ErrorMessage = "O autor deve possuir uma nacionalidade")]
     public string Nacionalidade { get; set; } = string.Empty;
+
+    [JsonIgnore]
+    public ICollection<Livro>? Livros {get; set;}
 }

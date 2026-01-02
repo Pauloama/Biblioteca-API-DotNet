@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using Biblioteca.API.Data;
 using Biblioteca.API.Repositories.Interfaces;
 using Biblioteca.API.Repositories;
-using Biblioteca.APi.Repositories.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 

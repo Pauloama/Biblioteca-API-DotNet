@@ -5,7 +5,7 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Biblioteca.API.Dtos;
 using AutoMapper;
-using Biblioteca.APi.Repositories.Interfaces;
+using Biblioteca.API.Repositories.Interfaces;
 
 namespace Biblioteca.API.Controllers;
 

@@ -1,6 +1,6 @@
 using Biblioteca.API.Models;
 
-namespace Biblioteca.APi.Repositories.Interfaces;
+namespace Biblioteca.API.Repositories.Interfaces;
 
 public interface IAutorRepository
 {
