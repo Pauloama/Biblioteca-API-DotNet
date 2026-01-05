@@ -16,12 +16,16 @@ public class LivroRepository : ILivroRepository
 
     public async Task<List<Livro>> ObterTodos()
     {
-        return await _context.Livros.ToListAsync();
+        return await _context.Livros
+        .Include(x => x.Autor)
+        .ToListAsync();
     }
 
     public async Task<Livro?> ObterPorId(int id)
     {
-        return await _context.Livros.FindAsync(id);
+        return await _context.Livros
+        .Include(x => x.Autor)
+        .FirstOrDefaultAsync(x => x.Id == id);
     }
 
     public async Task<Livro> Adicionar(Livro livro)

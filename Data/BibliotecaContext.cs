@@ -11,4 +11,15 @@ public class BibliotecaContext : DbContext
 
     public DbSet<Livro> Livros { get; set; }
     public DbSet<Autor> Autores{get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<Livro>()
+        .HasOne(l => l.Autor)
+        .WithMany(a => a.Livros)
+        .HasForeignKey(l => l.AutorId)
+        .OnDelete(DeleteBehavior.Restrict);
+    }
 }

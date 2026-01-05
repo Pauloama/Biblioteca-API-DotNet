@@ -75,11 +75,20 @@ public class AutorController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> Deletar(int id)
+    public async Task<ActionResult<AutorRespostaDto>> Deletar(int id)
     {
-        var sucesso = await _repository.Deletar(id);
-        if (!sucesso) return NotFound();
-
-        return NoContent();
+        try
+        {
+            var autorDeletado = await _repository.Deletar(id);
+            if (!autorDeletado)
+            {
+                return NotFound("Autor não encontrado.");
+            }
+            return NoContent();
+        }
+        catch (Exception)
+        {
+            return BadRequest("Não é possível apagar este autor pois ele poussui livros cadastrados");
+        }
     }
 }
