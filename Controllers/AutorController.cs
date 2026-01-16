@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Biblioteca.API.Dtos;
 using AutoMapper;
 using Biblioteca.API.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Biblioteca.API.Controllers;
 
@@ -46,6 +47,7 @@ public class AutorController : ControllerBase
         return Ok(autorDto);
     }
 
+    [Authorize]
     [HttpPost]
     public async Task<IActionResult> Criar(AutorCriacaoDto autorDto)
     {
