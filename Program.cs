@@ -82,4 +82,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+app.MapGet("/", () => "API está Rodando!");
+
 app.Run();
