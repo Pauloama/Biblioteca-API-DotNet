@@ -1,4 +1,5 @@
 {
     "appService.preDeployTask": "publish-release",
-    "appService.deploySubpath": "bin/Release/net10.0/publish"
+    "appService.deploySubpath": "bin\\Release\\net10.0\\publish",
+    "appService.defaultWebAppToDeploy": "/subscriptions/568906df-f60a-4f43-a3d7-4fa30e1a05af/resourceGroups/BibliotecaRG/providers/Microsoft.Web/sites/biblioteca-api"
 }
