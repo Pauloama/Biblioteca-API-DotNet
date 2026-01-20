@@ -9,7 +9,7 @@ public class LivroCriacaoDto
     public string Titulo { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "O autor é obrigatório")]
-    public int AutorId{get; set;}
+    public int AutorId { get; set; }
 
     [StringLength(50, ErrorMessage = "O gênero não pode passar de 50 caracteres.")]
     public string Genero { get; set; } = string.Empty;

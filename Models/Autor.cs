@@ -15,5 +15,5 @@ public class Autor
     public string Nacionalidade { get; set; } = string.Empty;
 
     [JsonIgnore]
-    public ICollection<Livro>? Livros {get; set;}
+    public ICollection<Livro>? Livros { get; set; }
 }

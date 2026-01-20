@@ -66,12 +66,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 var app = builder.Build();
 
 
-    app.UseSwagger();
-    app.UseSwaggerUI(options =>
-    {
-        options.SwaggerEndpoint("swagger/v1/swagger.json", "Biblioteca API v1");
-        options.RoutePrefix = "swagger";
-    });
+app.UseSwagger();
+app.UseSwaggerUI(options =>
+{
+    options.SwaggerEndpoint("swagger/v1/swagger.json", "Biblioteca API v1");
+    options.RoutePrefix = "swagger";
+});
 
 
 app.UseHttpsRedirection();

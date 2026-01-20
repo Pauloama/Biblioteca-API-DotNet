@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 
 namespace Biblioteca.API.Dtos;
+
 public class AutorCriacaoDto
 {
     [Required(ErrorMessage = "É preciso incluir o nome do autor.")]

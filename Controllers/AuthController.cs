@@ -26,13 +26,13 @@ public class AuthController : ControllerBase
         try
         {
             var usuarioId = await _authRepo.Registrar(usuarioParaCriar, usuarioDto.Password);
-            return Ok(new{message = $"Usuário criado com sucesso! ID: {usuarioId}"});
+            return Ok(new { message = $"Usuário criado com sucesso! ID: {usuarioId}" });
         }
         catch (Exception ex)
         {
             return BadRequest(ex.Message);
         }
-        
+
     }
 
     [HttpPost("login")]
@@ -44,12 +44,12 @@ public class AuthController : ControllerBase
 
             if (token == "Usuário não encontrado." || token == "Senha incorreta.")
                 return BadRequest(token);
-            
-            return Ok(new {token = token});
+
+            return Ok(new { token = token });
         }
         catch (Exception ex)
         {
-            return BadRequest("Erro ao realizar login: "+ ex.Message);
+            return BadRequest("Erro ao realizar login: " + ex.Message);
         }
     }
 }

@@ -41,7 +41,7 @@ public class AutorRepository : IAutorRepository
     public async Task<bool> Deletar(int id)
     {
         var autor = await _context.Autores.FindAsync(id);
-        if (autor  == null) return false;
+        if (autor == null) return false;
         _context.Autores.Remove(autor);
         await _context.SaveChangesAsync();
         return true;
